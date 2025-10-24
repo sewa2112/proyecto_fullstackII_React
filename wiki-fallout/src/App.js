@@ -19,9 +19,7 @@ function App() {
             <li><a href="#armas">Armas</a></li>
             <li><a href="#personajes">Personajes</a></li>
             <li><a href="#pipboy">Pip-Boy</a></li>
-            <li>
-              <Login setUsuario={setUsuario} usuario={usuario} />
-            </li>
+            <li><Login setUsuario={setUsuario} usuario={usuario}/></li>
           </ul>
         </nav>
       </header>
