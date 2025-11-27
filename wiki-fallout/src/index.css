@@ -82,12 +82,7 @@ footer {
   animation: blink 1.5s infinite;
 }
 
-/* Efecto parpadeo retro */
-@keyframes blink {
-  50% {
-    opacity: 0.6;
-  }
-}
+
 
 /* Botón en la barra */
 .btn-login {

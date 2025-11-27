@@ -1,27 +1,38 @@
-import { useState } from "react";
-import "./LogIn.css";
-export default function ContenidoEditable({ textoInicial, puedeEditar }) {
-  const [texto, setTexto] = useState(textoInicial);
-  const [editando, setEditando] = useState(false);
+import React, { useState } from "react";
 
-  const guardar = () => setEditando(false);
+export default function ContenidoEditable({ textoInicial, isLoggedIn }) {
+  const [editando, setEditando] = useState(false);
+  const [texto, setTexto] = useState(textoInicial);
+
+  const manejarClickEditar = () => {
+    if (isLoggedIn) setEditando(true);
+  };
+
+  const manejarGuardar = () => {
+    setEditando(false);
+  };
 
   return (
-    <div className="editable-box">
-      {editando && puedeEditar ? (
-        <textarea
-          value={texto}
-          onChange={(e) => setTexto(e.target.value)}
-          rows={5}
-        />
+    <div className="contenido-editable">
+      {!editando ? (
+        <>
+          <p>{texto}</p>
+          <button
+            data-testid="btnEditar"
+            onClick={manejarClickEditar}
+          >
+            Editar
+          </button>
+        </>
       ) : (
-        <p>{texto}</p>
-      )}
-
-      {puedeEditar && (
-        <button onClick={() => (editando ? guardar() : setEditando(true))}>
-          {editando ? "Guardar" : "Editar"}
-        </button>
+        <>
+          <textarea
+            data-testid="editor"
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+          />
+          <button onClick={manejarGuardar}>Guardar</button>
+        </>
       )}
     </div>
   );

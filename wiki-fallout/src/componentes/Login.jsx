@@ -1,75 +1,75 @@
-import React from "react";
-import { useState } from "react";
-import "./LogIn.css";
+import React, { useState } from "react";
 
+// Componente `Login`:
+// - Recibe `setUsuario` para actualizar el usuario logueado en el componente padre
+// - Recibe `usuario` para saber si ya hay una sesión iniciada y mostrar el botón de logout
 export default function Login({ setUsuario, usuario }) {
-  const [visible, setVisible] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  // Estados locales para controlar los campos del formulario y mensajes al usuario
+  const [username, setUsername] = useState(""); // valor del input 'Usuario'
+  const [password, setPassword] = useState(""); // valor del input 'Contraseña'
+  const [mensaje, setMensaje] = useState(""); // feedback (éxito/error)
 
-  const USER = "admin";
-  const PASS = "1234";
+  // manejarLogin: realiza una petición GET a la API (Xano) y valida credenciales
+  // Nota: en producción no se deberían traer contraseñas en texto plano ni validarlas en el cliente.
+  const manejarLogin = async () => {
+    try {
+      // GET a la API de Xano que devuelve la lista de usuarios
+      const res = await fetch("https://x8ki-letl-twmt.n7.xano.io/api:1NeVgW6G/usuarios");
+      const usuarios = await res.json();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (username === USER && password === PASS) {
-      setUsuario(username); // avisa al padre (App.js)
-      setMessage(`Bienvenido, ${username}!`);
-      setTimeout(() => setVisible(false), 1500);
-    } else {
-      setMessage("Usuario o contraseña incorrectos.");
+      // Buscar coincidencia de username y password en la lista obtenida
+      const encontrado = usuarios.find(
+        (u) => u.username === username && u.password === password
+      );
+
+      if (encontrado) {
+        // Si se encuentra, actualizamos el estado del usuario en el padre
+        setUsuario(encontrado.username);
+        setMensaje("Inicio de sesión exitoso");
+      } else {
+        // Si no coincide, mostramos mensaje de error
+        setMensaje("Usuario o contraseña incorrectos");
+      }
+    } catch (error) {
+      // Captura de errores de red/servidor
+      setMensaje("Error conectando con Xano");
+      console.error(error);
     }
   };
 
-  const handleClose = () => {
-    setVisible(false);
-    setMessage("");
-    setUsername("");
-    setPassword("");
-  };
-
-  const handleLogout = () => {
+  // manejarLogout: limpia la sesión en el componente padre
+  const manejarLogout = () => {
     setUsuario(null);
   };
 
+  // Salida JSX:
+  // - Si `usuario` existe, mostramos botón de 'Salir'
+  // - Si no, mostramos formulario simple con inputs controlados y botón de Login
   return (
-    <div className="login-navbar">
+    <div>
       {usuario ? (
-        <div className="login-user">
-          <span>{usuario}</span>
-          <button className="btn-logout" onClick={handleLogout}>Salir</button>
-        </div>
+        // Botón de logout cuando hay sesión activa
+        <button onClick={manejarLogout} className="btn-login">Salir</button>
       ) : (
-        <button className="btn-login" onClick={() => setVisible(true)}>
-          Login
-        </button>
-      )}
-
-      {visible && (
-        <div className="login-overlay">
-          <div className="login-box">
-            <button className="close-btn" onClick={handleClose}>✖</button>
-            <h2>Acceso a la Wiki Fallout</h2>
-            <form onSubmit={handleLogin}>
-              <input
-                type="text"
-                placeholder="Usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button type="submit">Entrar</button>
-            </form>
-            {message && <p className="login-message">{message}</p>}
-          </div>
+        <div>
+          {/* Input controlado para el nombre de usuario */}
+          <input
+            type="text"
+            placeholder="Usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          {/* Input controlado para la contraseña */}
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {/* Botón que dispara la verificación de credenciales */}
+          <button onClick={manejarLogin} className="btn-login">Login</button>
+          {/* Mensaje de feedback (éxito / error / conexión) */}
+          <p>{mensaje}</p>
         </div>
       )}
     </div>
