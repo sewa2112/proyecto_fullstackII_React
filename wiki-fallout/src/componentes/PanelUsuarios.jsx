@@ -9,9 +9,7 @@ export default function PanelUsuarios() {
   const [editUser, setEditUser] = useState({ username: "", password: "" });
   const [mensaje, setMensaje] = useState("");
 
-  // =============================
-  //   GET: Cargar usuarios
-  // =============================
+  //GET: Cargar usuarios
   const cargarUsuarios = async () => {
     try {
       const res = await fetch(API);
@@ -26,9 +24,7 @@ export default function PanelUsuarios() {
     cargarUsuarios();
   }, []);
 
-  // =============================
-  //   POST: Crear usuario
-  // =============================
+  //POST: Crear usuario
   const crearUsuario = async () => {
     try {
       const res = await fetch(API, {
@@ -48,31 +44,29 @@ export default function PanelUsuarios() {
     }
   };
 
-  // =============================
-  //   PATCH: Editar usuario
-  // =============================
+  //PUT: Editar usuario
   const guardarEdicion = async (id) => {
-    try {
-      const res = await fetch(`${API}/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editUser),
-      });
+  try {
+    const res = await fetch(`${API}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editUser),
+    });
 
-      if (!res.ok) throw new Error("Error editando usuario");
+    if (!res.ok) throw new Error("Error editando usuario");
 
-      setMensaje("Usuario editado correctamente");
-      setEditando(null);
-      cargarUsuarios();
-    } catch (error) {
-      console.error(error);
-      setMensaje("Error editando usuario");
-    }
-  };
+    setMensaje("Usuario editado correctamente");
+    setEditando(null);
+    setEditUser({ username: "", password: "" });
+    cargarUsuarios();
+  } catch (error) {
+    console.error(error);
+    setMensaje("Error editando usuario");
+  }
+};
 
-  // =============================
-  //   DELETE: Eliminar usuario
-  // =============================
+
+  //DELETE: Eliminar usuario 
   const eliminarUsuario = async (id) => {
     try {
       const res = await fetch(`${API}/${id}`, {

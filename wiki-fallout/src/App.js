@@ -1,7 +1,7 @@
 import './index.css';
 import Login from './componentes/Login';
 import ContenidoEditable from './componentes/ContenidoEditable';
-import PanelUsuarios from './componentes/PanelUsuarios'; // <-- Nuevo componente para CRUD
+import PanelUsuarios from './componentes/PanelUsuarios'; 
 import { useState } from "react";
 
 function App() {
@@ -22,21 +22,16 @@ function App() {
             <li><a href="#personajes">Personajes</a></li>
             <li><a href="#pipboy">Pip-Boy</a></li>
 
-            {/* Nuevo: sección del CRUD */}
+            
             {usuario && <li><a href="#panel-usuarios">Usuarios</a></li>}
 
-            {/* Login sigue igual */}
+            
             <li><Login setUsuario={setUsuario} usuario={usuario}/></li>
           </ul>
         </nav>
       </header>
 
       <main>
-
-        {/* ============================
-             SECCIONES DE LA WIKI
-        =============================== */}
-
         <section id="inicio">
           <img src="/Fallout.png" alt="Logo de Fallout" />
           <p>

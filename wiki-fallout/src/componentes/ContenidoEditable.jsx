@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-export default function ContenidoEditable({ textoInicial, isLoggedIn }) {
+export default function ContenidoEditable({ textoInicial, puedeEditar }) {
   const [editando, setEditando] = useState(false);
   const [texto, setTexto] = useState(textoInicial);
 
   const manejarClickEditar = () => {
-    if (isLoggedIn) setEditando(true);
+    if (puedeEditar) setEditando(true);
   };
 
   const manejarGuardar = () => {
@@ -13,16 +13,18 @@ export default function ContenidoEditable({ textoInicial, isLoggedIn }) {
   };
 
   return (
-    <div className="contenido-editable">
+    <div className="editable-box">
       {!editando ? (
         <>
           <p>{texto}</p>
-          <button
-            data-testid="btnEditar"
-            onClick={manejarClickEditar}
-          >
-            Editar
-          </button>
+          {puedeEditar && (
+            <button
+              data-testid="btnEditar"
+              onClick={manejarClickEditar}
+            >
+              Editar
+            </button>
+          )}
         </>
       ) : (
         <>
